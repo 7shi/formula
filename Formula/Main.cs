@@ -62,7 +62,16 @@ namespace Formula
 		
 		public override string ToString ()
 		{
-			return x + "*" + y;
+			string sx, sy;
+			if (x is Add)
+				sx = "(" + x + ")";
+			else
+				sx = x.ToString ();
+			if (y is Add)
+				sy = "(" + y + ")";
+			else
+				sy = y.ToString ();
+			return sx + "*" + sy;
 		}
 		
 		public override int Eval ()
