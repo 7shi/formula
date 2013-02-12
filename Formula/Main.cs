@@ -6,6 +6,10 @@ namespace Formula
 {
 	class Expr
 	{
+		public virtual int Eval ()
+		{
+			return 0;
+		}
 	}
 
 	class Value : Expr
@@ -20,6 +24,11 @@ namespace Formula
 		public override string ToString ()
 		{
 			return n.ToString ();
+		}
+
+		public override int Eval ()
+		{
+			return n;
 		}
 	}
 
@@ -38,18 +47,9 @@ namespace Formula
 			return x + "+" + y;
 		}
 
-		public int Eval ()
+		public override int Eval ()
 		{
-			int xn = 0, yn = 0;
-			if (x is Add)
-				xn = (x as Add).Eval ();
-			else if (x is Value)
-				xn = (x as Value).n;
-			if (y is Add)
-				yn = (y as Add).Eval ();
-			else if (y is Value)
-				yn = (y as Value).n;
-			return xn + yn;
+			return x.Eval() + y.Eval();
 		}
 	}
 
