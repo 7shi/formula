@@ -4,12 +4,9 @@ using System.Linq;
 
 namespace Formula
 {
-	class Expr
+	abstract class Expr
 	{
-		public virtual int Eval ()
-		{
-			return 0;
-		}
+		public abstract int Eval ();
 	}
 
 	class Value : Expr
