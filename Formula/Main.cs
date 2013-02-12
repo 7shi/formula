@@ -7,11 +7,21 @@ namespace Formula
 	class Value
 	{
 		public int n;
+
+		public override string ToString ()
+		{
+			return n.ToString ();
+		}
 	}
 
 	class Add
 	{
 		public Value x, y;
+
+		public override string ToString ()
+		{
+			return x + "+" + y;
+		}
 	}
 
 	class MainClass
