@@ -49,7 +49,7 @@ namespace Formula
 
 		public override int Eval ()
 		{
-			return x.Eval() + y.Eval();
+			return x.Eval () + y.Eval ();
 		}
 	}
 
