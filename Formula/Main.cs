@@ -50,6 +50,27 @@ namespace Formula
 		}
 	}
 
+	class Mul : Expr
+	{
+		public Expr x, y;
+		
+		public Mul (Expr x, Expr y)
+		{
+			this.x = x;
+			this.y = y;
+		}
+		
+		public override string ToString ()
+		{
+			return x + "*" + y;
+		}
+		
+		public override int Eval ()
+		{
+			return x.Eval () * y.Eval ();
+		}
+	}
+
 	class MainClass
 	{
 		public static void Main (string[] args)
@@ -75,6 +96,15 @@ namespace Formula
 				new Add (new Value (1), new Value (2)),
 				new Value (3));
 			Console.WriteLine ("f2: {0} = {1}", f2, f2.Eval ());
+
+			var f3a = new Add (
+				new Value (1),
+				new Mul (new Value (2), new Value (3)));
+			var f3b = new Mul (
+				new Add (new Value (1), new Value (2)),
+				new Value (3));
+			Console.WriteLine ("f3a: {0} = {1}", f3a, f3a.Eval ());
+			Console.WriteLine ("f3b: {0} = {1}", f3b, f3b.Eval ());
 		}
 	}
 }
