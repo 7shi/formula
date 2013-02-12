@@ -44,6 +44,11 @@ namespace Formula
 			var c2 = new Add { x = a2, y = b2 };
 			Console.WriteLine ("{0} + {1} = {2}", a2, b2, c2);
 			Console.WriteLine ("c2: {0} = {1}", c2, c2.Eval ());
+
+			var f1 = new Add {
+				x = new Value { n = 1 },
+				y = new Value { n = 2 } };
+			Console.WriteLine ("f1: {0} = {1}", f1, f1.Eval ());
 		}
 	}
 }
