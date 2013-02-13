@@ -82,6 +82,12 @@ namespace Formula
 		{
 			return (from x in list select x.Eval ()).Sum ();
 		}
+
+		public void Sort ()
+		{
+			list.Sort ((x, y) => (y is Var ? (y as Var).n : 0) -
+				(x is Var ? (x as Var).n : 0));
+		}
 	}
 
 	class Mul : Expr
@@ -187,6 +193,11 @@ namespace Formula
 			Console.WriteLine ("f5: {0}", f5);
 
 			var f6 = x [2] + 2 * x + 3 + 4 * x + 5 * x [2] + 6;
+			Console.WriteLine ("f6: {0}", f6);
+
+			f5.Sort ();
+			f6.Sort ();
+			Console.WriteLine ("f5: {0}", f5);
 			Console.WriteLine ("f6: {0}", f6);
 		}
 	}
