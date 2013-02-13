@@ -45,11 +45,7 @@ namespace Formula
 
 		public override int Eval ()
 		{
-			int sum = 0;
-			foreach (var x in list) {
-				sum += x.Eval ();
-			}
-			return sum;
+			return (from x in list select x.Eval ()).Sum ();
 		}
 	}
 
