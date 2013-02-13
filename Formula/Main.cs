@@ -113,16 +113,18 @@ namespace Formula
 
 	class Var : Expr
 	{
-		public int a;
+		public int a, n;
 
-		public Var (int a = 1)
+		public Var (int a = 1, int n = 1)
 		{
 			this.a = a;
+			this.n = n;
 		}
 
 		public override string ToString ()
 		{
-			return (a == 1 ? "" : a.ToString()) + "x";
+			return (a == 1 ? "" : a.ToString ()) +
+				"x" + (n == 1 ? "" : "^" + n);
 		}
 
 		public override int Eval ()
@@ -132,7 +134,11 @@ namespace Formula
 
 		public static Var operator* (int a, Var x)
 		{
-			return new Var (a * x.a);
+			return new Var (a * x.a, x.n);
+		}
+
+		public Var this [int n] {
+			get { return new Var (a, this.n * n); }
 		}
 	}
 
@@ -179,6 +185,9 @@ namespace Formula
 
 			var f5 = x + 2 + 3 * x + 4;
 			Console.WriteLine ("f5: {0}", f5);
+
+			var f6 = x [2] + 2 * x + 3 + 4 * x + 5 * x [2] + 6;
+			Console.WriteLine ("f6: {0}", f6);
 		}
 	}
 }
