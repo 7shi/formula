@@ -7,6 +7,11 @@ namespace Formula
 	abstract class Expr
 	{
 		public abstract int Eval ();
+
+		public static Add operator+ (Expr x, int n)
+		{
+			return new Add (x, new Value (n));
+		}
 	}
 
 	class Value : Expr
@@ -121,6 +126,9 @@ namespace Formula
 
 			var f4a = new Add (new Var (), new Value (1));
 			Console.WriteLine ("f4a: {0}", f4a);
+			var x = new Var ();
+			var f4b = x + 1;
+			Console.WriteLine ("f4b: {0}", f4b);
 		}
 	}
 }
