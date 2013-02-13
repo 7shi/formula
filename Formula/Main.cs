@@ -33,10 +33,9 @@ namespace Formula
 	{
 		public List<Expr> list = new List<Expr> ();
 
-		public Add (Expr x, Expr y)
+		public Add (params Expr[] args)
 		{
-			list.Add (x);
-			list.Add (y);
+			list.AddRange (args);
 		}
 
 		public override string ToString ()
