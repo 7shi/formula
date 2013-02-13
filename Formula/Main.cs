@@ -88,6 +88,33 @@ namespace Formula
 			list.Sort ((x, y) => (y is Var ? (y as Var).n : 0) -
 				(x is Var ? (x as Var).n : 0));
 		}
+
+		public void Simplify ()
+		{
+			Sort ();
+			var newlist = new List<Expr> ();
+			Expr last = null;
+			foreach (var x in list) {
+				if (last == null) {
+					last = x;
+				} else if (last is Value && x is Value) {
+					last = new Value ((last as Value).n + (x as Value).n);
+				} else {
+					var v1 = last as Var;
+					var v2 = x as Var;
+					if (v1 != null && v2 != null && v1.n == v2.n) {
+						last = new Var (v1.a + v2.a, v1.n);
+					} else {
+						if (last != null)
+							newlist.Add (last);
+						last = x;
+					}
+				}
+			}
+			if (last != null)
+				newlist.Add (last);
+			list = newlist;
+		}
 	}
 
 	class Mul : Expr
@@ -197,6 +224,11 @@ namespace Formula
 
 			f5.Sort ();
 			f6.Sort ();
+			Console.WriteLine ("f5: {0}", f5);
+			Console.WriteLine ("f6: {0}", f6);
+
+			f5.Simplify ();
+			f6.Simplify ();
 			Console.WriteLine ("f5: {0}", f5);
 			Console.WriteLine ("f6: {0}", f6);
 		}
