@@ -51,24 +51,23 @@ namespace Formula
 
 	class Mul : Expr
 	{
-		public Expr x, y;
+		public List<Expr> list = new List<Expr> ();
 		
-		public Mul (Expr x, Expr y)
+		public Mul (params Expr[] args)
 		{
-			this.x = x;
-			this.y = y;
+			list.AddRange (args);
 		}
 		
 		public override string ToString ()
 		{
-			var sx = x is Add ? "(" + x + ")" : x.ToString ();
-			var sy = y is Add ? "(" + y + ")" : y.ToString ();
-			return sx + "*" + sy;
+			return string.Join (
+				"*",
+				from x in list select x is Add ? "(" + x + ")" : x.ToString ());
 		}
 		
 		public override int Eval ()
 		{
-			return x.Eval () * y.Eval ();
+			return (from x in list select x.Eval ()).Aggregate ((x, y) => x * y);
 		}
 	}
 
