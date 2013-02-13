@@ -31,22 +31,26 @@ namespace Formula
 
 	class Add : Expr
 	{
-		public Expr x, y;
+		public List<Expr> list = new List<Expr> ();
 
 		public Add (Expr x, Expr y)
 		{
-			this.x = x;
-			this.y = y;
+			list.Add (x);
+			list.Add (y);
 		}
 
 		public override string ToString ()
 		{
-			return x + "+" + y;
+			return string.Join ("+", list);
 		}
 
 		public override int Eval ()
 		{
-			return x.Eval () + y.Eval ();
+			int sum = 0;
+			foreach (var x in list) {
+				sum += x.Eval ();
+			}
+			return sum;
 		}
 	}
 
