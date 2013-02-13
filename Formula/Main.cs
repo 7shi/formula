@@ -65,7 +65,12 @@ namespace Formula
 
 		public Add (params Expr[] args)
 		{
-			list.AddRange (args);
+			foreach (var x in args) {
+				if (x is Add)
+					list.AddRange ((x as Add).list);
+				else
+					list.Add (x);
+			}
 		}
 
 		public override string ToString ()
@@ -85,7 +90,12 @@ namespace Formula
 		
 		public Mul (params Expr[] args)
 		{
-			list.AddRange (args);
+			foreach (var x in args) {
+				if (x is Mul)
+					list.AddRange ((x as Mul).list);
+				else
+					list.Add (x);
+			}
 		}
 		
 		public override string ToString ()
