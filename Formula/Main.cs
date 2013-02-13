@@ -71,6 +71,19 @@ namespace Formula
 		}
 	}
 
+	class Var : Expr
+	{
+		public override string ToString ()
+		{
+			return "x";
+		}
+
+		public override int Eval ()
+		{
+			throw new NotImplementedException ();
+		}
+	}
+
 	class MainClass
 	{
 		public static void Main (string[] args)
@@ -105,6 +118,9 @@ namespace Formula
 				new Value (3));
 			Console.WriteLine ("f3a: {0} = {1}", f3a, f3a.Eval ());
 			Console.WriteLine ("f3b: {0} = {1}", f3b, f3b.Eval ());
+
+			var f4a = new Add (new Var (), new Value (1));
+			Console.WriteLine ("f4a: {0}", f4a);
 		}
 	}
 }
