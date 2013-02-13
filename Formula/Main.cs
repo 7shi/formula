@@ -12,6 +12,31 @@ namespace Formula
 		{
 			return new Add (x, new Value (n));
 		}
+		
+		public static Add operator+ (int n, Expr x)
+		{
+			return new Add (new Value (n), x);
+		}
+		
+		public static Add operator+ (Expr x, Expr y)
+		{
+			return new Add (x, y);
+		}
+		
+		public static Mul operator* (Expr x, int n)
+		{
+			return new Mul (x, new Value (n));
+		}
+		
+		public static Mul operator* (int n, Expr x)
+		{
+			return new Mul (new Value (n), x);
+		}
+		
+		public static Mul operator* (Expr x, Expr y)
+		{
+			return new Mul (x, y);
+		}
 	}
 
 	class Value : Expr
