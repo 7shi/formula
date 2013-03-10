@@ -166,7 +166,7 @@ namespace Formula
 
         public Expr ExpandLeft()
         {
-            return Expand(ExpandLeft);
+            return list.Aggregate(ExpandLeft);
         }
 
         public static Expr ExpandLeft(Expr x, Expr y)
@@ -178,10 +178,10 @@ namespace Formula
 
         public Expr ExpandRight()
         {
-            return Expand(ExpandRight);
+            return list.Reverse<Expr>().Aggregate(ExpandRight);
         }
 
-        public static Expr ExpandRight(Expr x, Expr y)
+        public static Expr ExpandRight(Expr y, Expr x)
         {
             var x2 = x as Add;
             if (x2 == null) return x * y;
