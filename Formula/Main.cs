@@ -18,6 +18,11 @@ namespace Formula
             return this;
         }
 
+        public virtual Expr Combine()
+        {
+            return this;
+        }
+
         public static Add operator +(Expr x, int n)
         {
             return new Add(x, new Value(n));
@@ -150,6 +155,11 @@ namespace Formula
         {
             return new Add(from x in list select x.ExpandRight());
         }
+
+        public override Expr Combine()
+        {
+            return new Add(from x in list select x.Combine());
+        }
     }
 
     class Mul : Expr
@@ -206,6 +216,27 @@ namespace Formula
             if (x3 == null) return x2 * y2;
             return new Add(from term in x3.list select term * y2);
         }
+
+        public override Expr Combine()
+        {
+            return new Add(list.Aggregate((x, y) =>
+            {
+                var xc = x.Combine();
+                var yc = y.Combine();
+                var vx = xc as Var;
+                var vy = yc as Var;
+                if (vx != null && vy != null)
+                    return new Var(vx.a * vy.a, vx.n + vy.n);
+                else if (xc is Value && yc is Value)
+                    return new Value(xc.Eval() * yc.Eval());
+                else if (vx != null && yc is Value)
+                    return yc.Eval() * vx;
+                else if (vy != null && xc is Value)
+                    return xc.Eval() * vy;
+                else
+                    return xc * yc;
+            }));
+        }
     }
 
     class Var : Expr
@@ -230,6 +261,11 @@ namespace Formula
         }
 
         public static Var operator *(int a, Var x)
+        {
+            return new Var(a * x.a, x.n);
+        }
+
+        public static Var operator *(Var x, int a)
         {
             return new Var(a * x.a, x.n);
         }
@@ -329,6 +365,10 @@ namespace Formula
             Console.WriteLine("f9c1: {0}", f9c1);
             var f9c2 = f9c1.ExpandLeft();
             Console.WriteLine("f9c2: {0}", f9c2);
+            var f9c3 = f9c2.Combine();
+            Console.WriteLine("f9c3: {0}", f9c3);
+            (f9c3 as Add).Simplify();
+            Console.WriteLine("f9c3: {0}", f9c3);
 
             var f10a = (x + 1) * (x + 2) * (x + 3);
             Console.WriteLine("f10a: {0}", f10a);
@@ -340,6 +380,10 @@ namespace Formula
             Console.WriteLine("f10c1: {0}", f10c1);
             var f10c2 = f10c1.ExpandLeft();
             Console.WriteLine("f10c2: {0}", f10c2);
+            var f10c3 = f10c2.Combine();
+            Console.WriteLine("f10c3: {0}", f10c3);
+            (f10c3 as Add).Simplify();
+            Console.WriteLine("f10c3: {0}", f10c3);
         }
     }
 }
