@@ -8,6 +8,16 @@ namespace Formula
     {
         public abstract int Eval();
 
+        public virtual Expr ExpandLeft()
+        {
+            return this;
+        }
+
+        public virtual Expr ExpandRight()
+        {
+            return this;
+        }
+
         public static Add operator +(Expr x, int n)
         {
             return new Add(x, new Value(n));
@@ -130,6 +140,16 @@ namespace Formula
                 newlist.Add(last);
             list = newlist;
         }
+
+        public override Expr ExpandLeft()
+        {
+            return new Add(from x in list select x.ExpandLeft());
+        }
+
+        public override Expr ExpandRight()
+        {
+            return new Add(from x in list select x.ExpandRight());
+        }
     }
 
     class Mul : Expr
@@ -159,33 +179,32 @@ namespace Formula
             return (from x in list select x.Eval()).Aggregate((x, y) => x * y);
         }
 
-        public Expr Expand(Func<Expr, Expr, Expr> f)
-        {
-            return list.Aggregate(f);
-        }
-
-        public Expr ExpandLeft()
+        public override Expr ExpandLeft()
         {
             return list.Aggregate(ExpandLeft);
         }
 
         public static Expr ExpandLeft(Expr x, Expr y)
         {
-            var y2 = y as Add;
-            if (y2 == null) return x * y;
-            return new Add(from term in y2.list select x * term);
+            var x2 = x.ExpandLeft();
+            var y2 = y.ExpandLeft();
+            var y3 = y2 as Add;
+            if (y3 == null) return x2 * y2;
+            return new Add(from term in y3.list select x2 * term);
         }
 
-        public Expr ExpandRight()
+        public override Expr ExpandRight()
         {
             return list.Reverse<Expr>().Aggregate(ExpandRight);
         }
 
         public static Expr ExpandRight(Expr y, Expr x)
         {
-            var x2 = x as Add;
-            if (x2 == null) return x * y;
-            return new Add(from term in x2.list select term * y);
+            var x2 = x.ExpandRight();
+            var y2 = y.ExpandRight();
+            var x3 = x2 as Add;
+            if (x3 == null) return x2 * y2;
+            return new Add(from term in x3.list select term * y2);
         }
     }
 
@@ -280,31 +299,47 @@ namespace Formula
 
             var f7a = x * (x + 1);
             Console.WriteLine("f7a: {0}", f7a);
-            var f7b = f7a.ExpandLeft();
-            Console.WriteLine("f7b: {0}", f7b);
-            var f7c = f7a.ExpandRight();
-            Console.WriteLine("f7c: {0}", f7c);
+            var f7b1 = f7a.ExpandLeft();
+            Console.WriteLine("f7b1: {0}", f7b1);
+            var f7b2 = f7b1.ExpandRight();
+            Console.WriteLine("f7b2: {0}", f7b2);
+            var f7c1 = f7a.ExpandRight();
+            Console.WriteLine("f7c1: {0}", f7c1);
+            var f7c2 = f7c1.ExpandLeft();
+            Console.WriteLine("f7c2: {0}", f7c2);
 
             var f8a = (x + 1) * x;
             Console.WriteLine("f8a: {0}", f8a);
-            var f8b = f8a.ExpandLeft();
-            Console.WriteLine("f8b: {0}", f8b);
-            var f8c = f8a.ExpandRight();
-            Console.WriteLine("f8c: {0}", f8c);
+            var f8b1 = f8a.ExpandLeft();
+            Console.WriteLine("f8b1: {0}", f8b1);
+            var f8b2 = f8b1.ExpandRight();
+            Console.WriteLine("f8b2: {0}", f8b2);
+            var f8c1 = f8a.ExpandRight();
+            Console.WriteLine("f8c1: {0}", f8c1);
+            var f8c2 = f8c1.ExpandLeft();
+            Console.WriteLine("f8c2: {0}", f8c2);
 
             var f9a = (x + 1) * (x + 2);
             Console.WriteLine("f9a: {0}", f9a);
-            var f9b = f9a.ExpandLeft();
-            Console.WriteLine("f9b: {0}", f9b);
-            var f9c = f9a.ExpandRight();
-            Console.WriteLine("f9c: {0}", f9c);
+            var f9b1 = f9a.ExpandLeft();
+            Console.WriteLine("f9b1: {0}", f9b1);
+            var f9b2 = f9b1.ExpandRight();
+            Console.WriteLine("f9b2: {0}", f9b2);
+            var f9c1 = f9a.ExpandRight();
+            Console.WriteLine("f9c1: {0}", f9c1);
+            var f9c2 = f9c1.ExpandLeft();
+            Console.WriteLine("f9c2: {0}", f9c2);
 
             var f10a = (x + 1) * (x + 2) * (x + 3);
             Console.WriteLine("f10a: {0}", f10a);
-            var f10b = f10a.ExpandLeft();
-            Console.WriteLine("f10b: {0}", f10b);
-            var f10c = f10a.ExpandRight();
-            Console.WriteLine("f10c: {0}", f10c);
+            var f10b1 = f10a.ExpandLeft();
+            Console.WriteLine("f10b1: {0}", f10b1);
+            var f10b2 = f10b1.ExpandRight();
+            Console.WriteLine("f10b2: {0}", f10b2);
+            var f10c1 = f10a.ExpandRight();
+            Console.WriteLine("f10c1: {0}", f10c1);
+            var f10c2 = f10c1.ExpandLeft();
+            Console.WriteLine("f10c2: {0}", f10c2);
         }
     }
 }
